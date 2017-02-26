@@ -4,19 +4,36 @@ using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
-
+using System.Threading;
 
 namespace AddressbookWebTests
 {
-    [TestFixture]
-    public class Untitled
+    public class AppSteps
     {
         private IWebDriver driver;
         private StringBuilder verificationErrors;
         private string baseURL;
         private bool acceptNextAlert = true;
 
-        [SetUp]
+        public IWebDriver Driver
+        {
+            get
+            {
+                return driver;
+            }
+
+            set
+            {
+                driver = value;
+            }
+        }
+
+        public AppSteps()
+        {
+               
+        } 
+
+        
         public void SetupTest()
         {
             driver = new FirefoxDriver(new FirefoxBinary("C:\\Program Files\\Mozilla Firefox\\firefox.exe"), new FirefoxProfile());
@@ -24,7 +41,7 @@ namespace AddressbookWebTests
             verificationErrors = new StringBuilder();
         }
 
-        [TearDown]
+        
         public void TeardownTest()
         {
             try
@@ -38,37 +55,52 @@ namespace AddressbookWebTests
             Assert.AreEqual("", verificationErrors.ToString());
         }
 
-        [Test]
-        public void CreateGroupWithoutParentTest()
+
+
+        public void WaitForText(string text)
         {
-            OpenHomePage();
-            AccountData user = new AccountData();
-            user.Username = "admin";
-            user.Password = "secret";
-            Login(user);
-            GoToGroupsName();
-            InitGroupCreation();
+            for (int second = 0; ; second++)
+            {
+                if (second >= 5) Assert.Fail("Timeout! Text '" + text + "' is not appeared on page in " + second +" seconds.");
+                try
+                {
+                    if ((driver.FindElements(By.XPath("//*[contains(text(),'"+text+"')]"))).Count > 0) break;
+                }
+                catch (Exception)
+                { }
+                Thread.Sleep(1000);
+            }
+        }
 
-            GroupData group = new GroupData();
-            long timestamp = System.Diagnostics.Stopwatch.GetTimestamp();
-            group.Name = "name" + timestamp;
-            group.Header = "header" + timestamp;
-            group.Footer = "footer" + timestamp;
-            FillGroupForm(group);
+       
 
-            Submit();
-            ReturnToGroupsPage();
+        public void InitNewContactCreation()
+        {
+            driver.FindElement(By.LinkText("add new")).Click();
+        }
 
-            string[] groupNames = GetGroupNames();
-            Assert.Contains(group.Name, groupNames);
-
-            Logout();
+        public void GoToNewContactPage()
+        {
+            driver.Navigate().GoToUrl(baseURL + "/addressbook/");
         }
 
 
+        public string[] GetContactNames()
+        {
+            // only firstname text  
+            System.Collections.Generic.IList<IWebElement> all = driver.FindElements(By.CssSelector("tr[name='entry'] td:nth-of-type(2)"));
+            String[] contactNames = new String[all.Count];
+            int i = 0;
+            foreach (IWebElement element in all)
+            {
+                contactNames[i++] = element.Text;
+            }
+
+            return contactNames;
+        }
 
 
-        private string[] GetGroupNames()
+        public string[] GetGroupNames()
         {
             System.Collections.Generic.IList<IWebElement> all = driver.FindElements(By.XPath("//span[@class='group']"));
             String[] groupNames = new String[all.Count];
@@ -81,53 +113,40 @@ namespace AddressbookWebTests
             return groupNames;
         }
 
-        private void Logout()
+        public void Logout()
         {
             driver.FindElement(By.LinkText("Logout")).Click();
         }
 
-        private void ReturnToGroupsPage()
+        public void ReturnToGroupsPage()
         {
             GoToGroupsName();
         }
 
-        private void Submit()
+        public void Submit()
         {
             driver.FindElement(By.Name("submit")).Click();
         }
 
-        private void FillGroupForm(GroupData group)
-        {
-            driver.FindElement(By.Name("group_name")).SendKeys(group.Name);
-            new SelectElement(driver.FindElement(By.Name("group_parent_id"))).SelectByText(group.ParentGroupName);
-            driver.FindElement(By.Name("group_header")).SendKeys(group.Header);
-            driver.FindElement(By.Name("group_footer")).SendKeys(group.Footer);
-        }
-
-        private void InitGroupCreation()
+        public void InitGroupCreation()
         {
             driver.FindElement(By.Name("new")).Click();
         }
 
-        private void GoToGroupsName()
+        public void GoToGroupsName()
         {
             driver.FindElement(By.LinkText("groups")).Click();
         }
 
 
-        private void Login(AccountData user)
-        {
-            driver.FindElement(By.Name("user")).SendKeys(user.Username);
-            driver.FindElement(By.Name("pass")).SendKeys(user.Password);
-            driver.FindElement(By.CssSelector("input[type=\"submit\"]")).Click();
-        }
 
-        private void OpenHomePage()
+
+        public void OpenHomePage()
         {
             driver.Navigate().GoToUrl(baseURL + "/addressbook/");
         }
 
-        private bool IsElementPresent(By by)
+        public bool IsElementPresent(By by)
         {
             try
             {
@@ -140,7 +159,7 @@ namespace AddressbookWebTests
             }
         }
 
-        private bool IsAlertPresent()
+        public bool IsAlertPresent()
         {
             try
             {
@@ -153,7 +172,7 @@ namespace AddressbookWebTests
             }
         }
 
-        private string CloseAlertAndGetItsText()
+        public string CloseAlertAndGetItsText()
         {
             try
             {

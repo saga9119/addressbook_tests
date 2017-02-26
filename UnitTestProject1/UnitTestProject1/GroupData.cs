@@ -8,10 +8,10 @@ namespace AddressbookWebTests
 {
     class GroupData
     {
-        private string name;
-        private string header;
-        private string footer;
-        private string parentGroupName;
+       private string name;
+       private string header;
+       private string footer;
+       private string parentGroupName;
 
         public GroupData(
             string name = "", 
