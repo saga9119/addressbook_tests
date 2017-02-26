@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
 using OpenQA.Selenium.Support.UI;
 
-namespace SeleniumTests
+
+namespace AddressbookWebTests
 {
     [TestFixture]
-    public class Untitled
+    public class CreateGroupTests
     {
         private IWebDriver driver;
         private StringBuilder verificationErrors;
@@ -40,23 +39,94 @@ namespace SeleniumTests
         }
 
         [Test]
-        public void CreateGroupTest()
+        public void CreateGroupWithoutParentTest()
         {
-            driver.Navigate().GoToUrl(baseURL + "/addressbook/");
-            driver.FindElement(By.Name("user")).SendKeys("admin");
-            driver.FindElement(By.Name("pass")).SendKeys("secret");
-            driver.FindElement(By.CssSelector("input[type=\"submit\"]")).Click();
-            driver.FindElement(By.LinkText("groups")).Click();
-            driver.FindElement(By.Name("new")).Click();
-            driver.FindElement(By.Name("group_name")).SendKeys("test");
-            driver.FindElement(By.Name("group_header")).Clear();
-            driver.FindElement(By.Name("group_header")).SendKeys("test");
-            driver.FindElement(By.Name("group_footer")).Clear();
-            driver.FindElement(By.Name("group_footer")).SendKeys("test");
-            driver.FindElement(By.Name("submit")).Click();
-            driver.FindElement(By.LinkText("groups")).Click();
+            OpenHomePage();
+            AccountData user = new AccountData();
+            user.Username = "admin";
+            user.Password = "secret";
+            Login(user);
+            GoToGroupsName();
+            InitGroupCreation();
+
+            GroupData group = new GroupData();
+            long timestamp = System.Diagnostics.Stopwatch.GetTimestamp();
+            group.Name = "name" + timestamp;
+            group.Header = "header" + timestamp;
+            group.Footer = "footer" + timestamp;
+            FillGroupForm(group);
+
+            SubmitGroupCreation();
+            ReturnToGroupsPage();
+
+            string[] groupNames = GetGroupNames();
+            Assert.Contains(group.Name, groupNames);
+
+            Logout();
+        }
+
+
+
+
+        private string[] GetGroupNames()
+        {
+            System.Collections.Generic.IList<IWebElement> all = driver.FindElements(By.XPath("//span[@class='group']"));
+            String[] groupNames = new String[all.Count];
+            int i = 0;
+            foreach (IWebElement element in all)
+            {
+                groupNames[i++] = element.Text;
+            }
+
+            return groupNames;
+        }
+
+        private void Logout()
+        {
             driver.FindElement(By.LinkText("Logout")).Click();
         }
+
+        private void ReturnToGroupsPage()
+        {
+            GoToGroupsName();
+        }
+
+        private void SubmitGroupCreation()
+        {
+            driver.FindElement(By.Name("submit")).Click();
+        }
+
+        private void FillGroupForm(GroupData group)
+        {
+            driver.FindElement(By.Name("group_name")).SendKeys(group.Name);
+            new SelectElement(driver.FindElement(By.Name("group_parent_id"))).SelectByText(group.ParentGroupName);
+            driver.FindElement(By.Name("group_header")).SendKeys(group.Header);
+            driver.FindElement(By.Name("group_footer")).SendKeys(group.Footer);
+        }
+
+        private void InitGroupCreation()
+        {
+            driver.FindElement(By.Name("new")).Click();
+        }
+
+        private void GoToGroupsName()
+        {
+            driver.FindElement(By.LinkText("groups")).Click();
+        }
+
+
+        private void Login(AccountData user)
+        {
+            driver.FindElement(By.Name("user")).SendKeys(user.Username);
+            driver.FindElement(By.Name("pass")).SendKeys(user.Password);
+            driver.FindElement(By.CssSelector("input[type=\"submit\"]")).Click();
+        }
+
+        private void OpenHomePage()
+        {
+            driver.Navigate().GoToUrl(baseURL + "/addressbook/");
+        }
+
         private bool IsElementPresent(By by)
         {
             try
