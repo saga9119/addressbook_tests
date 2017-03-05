@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AddressbookWebTests
+﻿namespace AddressbookWebTests
 {
-    class GroupData
+    public class GroupData
     {
-       private string name;
-       private string header;
-       private string footer;
-       private string parentGroupName;
+        private string name;
+        private string header;
+        private string footer;
+        private string parentGroupName;
 
         public GroupData(
-            string name = "", 
-            string header = "", 
-            string footer = "", 
+            string name = "",
+            string header = "",
+            string footer = "",
             string parentGroupName = "[none]"
             )
         {

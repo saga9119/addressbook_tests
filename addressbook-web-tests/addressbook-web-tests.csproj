@@ -67,13 +67,12 @@
   <ItemGroup>
     <Compile Include="AccountData.cs" />
     <Compile Include="ContactData.cs" />
-    <Compile Include="AppSteps.cs" />
-    <Compile Include="CreateGroupV2Test.cs" />
-    <Compile Include="CreateContactV2Test.cs" />
     <Compile Include="CreateContactTest.cs" />
+    <Compile Include="DeleteGroupTest.cs" />
     <Compile Include="GroupData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CreateGroupTest.cs" />
+    <Compile Include="TestBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
