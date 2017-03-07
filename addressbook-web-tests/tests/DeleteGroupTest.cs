@@ -10,10 +10,7 @@ namespace AddressbookWebTests
         [Test]
         public void GroupRemovingTest()
         {
-            GoToGroupsPage();
-            SelectGroup(1);
-            SubmitDelete();
-            ReturnToGroupsPage();
+            app.Group.DeleteGroup(1);
         }
     }
 }
