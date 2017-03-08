@@ -63,9 +63,10 @@ namespace AddressbookWebTests
 
 
         {
-            this.firstname = firstname;
-            this.middlename = middlename;
-            this.lastname = lastname;
+            long timestamp = System.Diagnostics.Stopwatch.GetTimestamp();
+            this.firstname = firstname + timestamp;
+            this.middlename = middlename + timestamp;
+            this.lastname = lastname + timestamp;
             this.nickname = nickname;
             this.title = title;
             this.company = company;

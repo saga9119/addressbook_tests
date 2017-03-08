@@ -28,6 +28,12 @@ namespace AddressbookWebTests
             return this;
         }
 
+        public BaseHelper SubmitUpdate()
+        {
+            driver.FindElement(By.Name("update")).Click();
+            return this;
+        }
+
 
         public WaitHelper Wait
         {

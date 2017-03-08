@@ -32,6 +32,14 @@ namespace AddressbookWebTests
             return this;
         }
 
+        public GroupHelper EditGroup(int index, GroupData group)
+        {
+            manager.Nav.GoToGroupsPage();
+            SelectGroup(index).InitGroupEdit().FillGroupForm(group).SubmitUpdate();
+            manager.Nav.ReturnToGroupsPage();
+            return this;
+        }
+
         public GroupHelper SelectGroup(int index)
         {
             driver.FindElement(By.XPath("//input[@name='selected[]'][" + index + "]")).Click();
@@ -41,6 +49,12 @@ namespace AddressbookWebTests
         public GroupHelper InitGroupCreation()
         {
             driver.FindElement(By.Name("new")).Click();
+            return this;
+        }
+
+        public GroupHelper InitGroupEdit()
+        {
+            driver.FindElement(By.Name("edit")).Click();
             return this;
         }
 
@@ -59,9 +73,12 @@ namespace AddressbookWebTests
 
         public GroupHelper FillGroupForm(GroupData group)
         {
+            driver.FindElement(By.Name("group_name")).Clear();
             driver.FindElement(By.Name("group_name")).SendKeys(group.Name);
             new SelectElement(driver.FindElement(By.Name("group_parent_id"))).SelectByText(group.ParentGroupName);
+            driver.FindElement(By.Name("group_header")).Clear();
             driver.FindElement(By.Name("group_header")).SendKeys(group.Header);
+            driver.FindElement(By.Name("group_footer")).Clear();
             driver.FindElement(By.Name("group_footer")).SendKeys(group.Footer);
 
             return this;

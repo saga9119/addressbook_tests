@@ -29,6 +29,12 @@ namespace AddressbookWebTests
             return this;
         }
 
+        public NavigationHelper GoToContactsPage()
+        {
+            OpenHomePage();
+            return this;
+        }
+
         public NavigationHelper ReturnToGroupsPage()
         {
             GoToGroupsPage();

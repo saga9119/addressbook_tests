@@ -10,6 +10,54 @@ namespace AddressbookWebTests
         {
         }
 
+        public ContactHelper EditContact(int index, ContactData contact)
+        {
+            manager.Nav.GoToContactsPage();
+            SelectContact(index).InitContactEdit(index).FillContactForm(contact).SubmitUpdateContact();
+            manager.Nav.GoToContactsPage();
+            return this;
+        }
+
+
+
+        public ContactHelper DeleteContact(int index)
+        {
+            manager.Nav.GoToContactsPage();
+            SelectContact(index)
+                .InitContactRemoving(index)
+                .SubmitDeleteContact();
+            manager.Nav.GoToContactsPage();
+            return this;
+        }
+
+        public ContactHelper DeleteContactFromList(int index)
+        {
+            manager.Nav.GoToContactsPage();
+            SelectContact(index)
+                .SubmitDeleteContact();
+            driver.SwitchTo().Alert().Accept();
+            manager.Nav.GoToContactsPage();
+            return this;
+        }
+
+        public ContactHelper SubmitDeleteContact()
+        {
+            driver.FindElement(By.CssSelector("*[value='Delete']")).Click();
+            return this;
+        }
+
+        public ContactHelper SubmitUpdateContact()
+        {
+            driver.FindElement(By.CssSelector("*[value='Update']")).Click();
+            return this;
+        }
+
+        public ContactHelper SelectContact(int index)
+        {
+            driver.FindElement(By.XPath("//input[@name='selected[]'][" + index + "]")).Click();
+            return this;
+        }
+
 
         public ContactHelper CreateContact(ContactData contact)
         {
@@ -75,6 +123,19 @@ namespace AddressbookWebTests
         public ContactHelper InitNewContactCreation()
         {
             driver.FindElement(By.LinkText("add new")).Click();
+            return this;
+        }
+
+       
+        public ContactHelper InitContactRemoving(int index)
+        {
+            InitContactEdit(index);
+            return this;
+        }
+
+        public ContactHelper InitContactEdit(int index)
+        {
+            driver.FindElements(By.CssSelector("*[title='Edit']"))[index - 1].Click();
             return this;
         }
 

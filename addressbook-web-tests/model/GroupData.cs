@@ -7,16 +7,18 @@
         private string footer;
         private string parentGroupName;
 
-        public GroupData(
+        public GroupData( 
             string name = "",
             string header = "",
             string footer = "",
             string parentGroupName = "[none]"
+
             )
         {
-            this.name = name;
-            this.header = header;
-            this.footer = footer;
+            long timestamp = System.Diagnostics.Stopwatch.GetTimestamp();
+            this.name = name + timestamp;
+            this.header = header + timestamp;
+            this.footer = footer + timestamp;
             this.parentGroupName = parentGroupName;
 
         }
