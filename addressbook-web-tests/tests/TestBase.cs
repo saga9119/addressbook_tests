@@ -8,20 +8,13 @@ namespace AddressbookWebTests
         protected ApplicationManager app;
 
         [SetUp]
-        public void SetupTest()
+        public void SetupApplicationManager()
         {
-            app = new ApplicationManager();
-            app.Nav.OpenHomePage();
-            AccountData user = new AccountData();
-            user.Username = "admin";
-            user.Password = "secret";
-            app.Auth.Login(user);
-        }
-
-        [TearDown]
-        public void TeardownTest()
-        {
-            app.Stop();
+            app = ApplicationManager.GetInstance();
+            if (app.Auth.IsLoggedIn())
+            {
+                app.Auth.Logout();
+            }
         }
     }
 }

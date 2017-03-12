@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 
 namespace AddressbookWebTests
 {
@@ -19,12 +14,21 @@ namespace AddressbookWebTests
 
         public NavigationHelper GoToGroupsPage()
         {
+            if (driver.Url == baseURL + "/addressbook/group.php" &&
+                    (IsElementPresent(By.Name("new"))))
+            {
+                return this;
+            }
             driver.FindElement(By.LinkText("groups")).Click();
             return this;
         }
 
         public NavigationHelper OpenHomePage()
         {
+            if (driver.Url == baseURL + "/addressbook/")
+            {
+                return this;
+            }
             driver.Navigate().GoToUrl(baseURL + "/addressbook/");
             return this;
         }
@@ -43,7 +47,7 @@ namespace AddressbookWebTests
 
         public NavigationHelper GoToNewContactPage()
         {
-            driver.Navigate().GoToUrl(baseURL + "/addressbook/");
+            OpenHomePage();
             return this;
         }
     }

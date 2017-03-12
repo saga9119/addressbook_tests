@@ -20,8 +20,10 @@ namespace AddressbookWebTests
         protected ContactHelper contactHelper;
         protected WaitHelper waitHelper;
 
+        private static ThreadLocal<ApplicationManager> app = new ThreadLocal<ApplicationManager>();
 
-        public ApplicationManager()
+
+        private ApplicationManager()
         {
             driver = new FirefoxDriver(new FirefoxBinary("C:\\Program Files\\Mozilla Firefox\\firefox.exe"), new FirefoxProfile());
             baseURL = "http://localhost";
@@ -35,7 +37,7 @@ namespace AddressbookWebTests
 
         }
 
-        public void Stop()
+        ~ApplicationManager()
         {
             Auth.Logout();
 
@@ -48,6 +50,18 @@ namespace AddressbookWebTests
                 // Ignore errors if unable to close the browser
             }
             Assert.AreEqual("", verificationErrors.ToString());
+
+        }
+
+        public static ApplicationManager GetInstance()
+        {
+            if (!app.IsValueCreated)
+            {
+                ApplicationManager newInstance = new ApplicationManager();
+                newInstance.Nav.OpenHomePage();
+                app.Value = newInstance;
+            }
+            return app.Value;
         }
 
 

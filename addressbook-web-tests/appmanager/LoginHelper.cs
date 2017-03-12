@@ -12,11 +12,31 @@ namespace AddressbookWebTests
 
         public LoginHelper Login(AccountData user)
         {
-            driver.FindElement(By.Name("user")).SendKeys(user.Username);
-            driver.FindElement(By.Name("pass")).SendKeys(user.Password);
-            driver.FindElement(By.CssSelector("input[type=\"submit\"]")).Click();
+            if (IsLoggedIn())
+            {
+                if (IsLoggedIn(user))
+                {
+                    return this;
+                }
+                Logout();
 
+            }
+
+            Type(By.Name("user"), user.Username);
+            Type(By.Name("pass"), user.Password);
+            driver.FindElement(By.CssSelector("input[type=\"submit\"]")).Click();
             return this;
+        }
+
+        public bool IsLoggedIn()
+        {
+            return IsElementPresent(By.LinkText("Logout"));
+        }
+
+        public bool IsLoggedIn(AccountData account)
+        {
+            return IsLoggedIn() && 
+                IsElementPresent(By.XPath("//b[text()='("+account.Username+")']"));
         }
 
         public LoginHelper Logout()

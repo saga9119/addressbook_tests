@@ -4,7 +4,7 @@
 namespace AddressbookWebTests
 {
     [TestFixture]
-    public class CreateContactTests : TestBase
+    public class CreateContactTests : AuthTestBase
     {
 
         [Test]

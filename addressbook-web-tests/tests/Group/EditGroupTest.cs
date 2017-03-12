@@ -4,15 +4,22 @@
 namespace AddressbookWebTests
 {
     [TestFixture]
-    public class EditGroupTest : TestBase
+    public class EditGroupTest : GroupTestBase
     {
+
+        [SetUp]
+        public void CreateGroupIfNone()
+        {
+            if (!app.Group.IsAtLeastOneGroup())
+            {
+                app.Group.CreateGroup(new GroupData());
+            }
+        }
 
         [Test]
         public void GroupModificationTest()
         {
             GroupData group = new GroupData();
-            app.Group.CreateGroup(group);
-
             long timestamp = System.Diagnostics.Stopwatch.GetTimestamp();
             group.Name = "name" + timestamp;
             group.Header = "header" + timestamp;

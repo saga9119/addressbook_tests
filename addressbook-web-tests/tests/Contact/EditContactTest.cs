@@ -4,14 +4,13 @@
 namespace AddressbookWebTests
 {
     [TestFixture]
-    public class EditContactTest : TestBase
+    public class EditContactTest : ContactTestBase
     {
 
         [Test]
         public void ContactModificationTest()
         {
             ContactData contact = new ContactData();
-            app.Contact.CreateContact(contact);
             contact.Lastname = "edited" + System.Diagnostics.Stopwatch.GetTimestamp();
 
             app.Nav.GoToContactsPage();

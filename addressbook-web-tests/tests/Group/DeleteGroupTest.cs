@@ -4,13 +4,12 @@
 namespace AddressbookWebTests
 {
     [TestFixture]
-    public class DeleteGroupTest : TestBase
+    public class DeleteGroupTest : GroupTestBase
     {
 
         [Test]
         public void GroupRemovingTest()
         {
-            app.Group.CreateGroup(new GroupData());
             app.Group.DeleteGroup(1);
         }
     }
