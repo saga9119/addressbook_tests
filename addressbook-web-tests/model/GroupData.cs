@@ -1,28 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AddressbookWebTests
+﻿namespace AddressbookWebTests
 {
-    class GroupData
+    public class GroupData
     {
-       private string name;
-       private string header;
-       private string footer;
-       private string parentGroupName;
+        private string name;
+        private string header;
+        private string footer;
+        private string parentGroupName;
 
-        public GroupData(
-            string name = "", 
-            string header = "", 
-            string footer = "", 
+        public GroupData( 
+            string name = "",
+            string header = "",
+            string footer = "",
             string parentGroupName = "[none]"
+
             )
         {
-            this.name = name;
-            this.header = header;
-            this.footer = footer;
+            long timestamp = System.Diagnostics.Stopwatch.GetTimestamp();
+            this.name = name + timestamp;
+            this.header = header + timestamp;
+            this.footer = footer + timestamp;
             this.parentGroupName = parentGroupName;
 
         }

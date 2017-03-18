@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AddressbookWebTests
+﻿namespace AddressbookWebTests
 {
-    class ContactData
+    public class ContactData
     {
         private string firstname;
         private string middlename;
@@ -60,12 +54,13 @@ namespace AddressbookWebTests
             string phone2 = "phone2",
             string notes = "notes"
         )
- 
-                
+
+
         {
-            this.firstname = firstname;
-            this.middlename = middlename;
-            this.lastname = lastname;
+            long timestamp = System.Diagnostics.Stopwatch.GetTimestamp();
+            this.firstname = firstname + timestamp;
+            this.middlename = middlename + timestamp;
+            this.lastname = lastname + timestamp;
             this.nickname = nickname;
             this.title = title;
             this.company = company;
