@@ -1,6 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
 using System;
+using System.Collections.Generic;
 
 namespace AddressbookWebTests
 {
@@ -10,11 +11,64 @@ namespace AddressbookWebTests
         {
         }
 
+
+        private List<ContactData> contactCache = null;
+
+        public List<ContactData> GetContactsList()
+        {
+            if (contactCache == null)
+            {
+                contactCache = new List<ContactData>();
+                manager.Nav.GoToContactsPage();
+                ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("tr[name='entry']"));
+                foreach (IWebElement element in elements)
+                {
+                    ContactData contact = new ContactData();
+
+                    contact.ContactId = element.FindElement(By.TagName("input")).GetAttribute("id");
+                    contact.Firstname = element.FindElement(By.CssSelector("tr[name='entry'] td:nth-child(3)")).Text;
+                    contact.Middlename = null;
+                    contact.Lastname = element.FindElement(By.CssSelector("tr[name='entry'] td:nth-child(2)")).Text;
+                    contact.Nickname = null;
+                    contact.Title = null;
+                    contact.Company = null;
+                    contact.Address = element.FindElement(By.CssSelector("tr[name='entry'] td:nth-child(4)")).Text;
+                    contact.Home = element.FindElement(By.CssSelector("tr[name='entry'] td:nth-child(6)")).Text;
+                    contact.Mobile = element.FindElement(By.CssSelector("tr[name='entry'] td:nth-child(6)")).Text;
+                    contact.Work = element.FindElement(By.CssSelector("tr[name='entry'] td:nth-child(6)")).Text;
+                    contact.Fax = null;
+                    contact.Email = element.FindElement(By.CssSelector("tr[name='entry'] td:nth-child(5)")).Text;
+                    contact.Email2 = element.FindElement(By.CssSelector("tr[name='entry'] td:nth-child(5)")).Text;
+                    contact.Email3 = element.FindElement(By.CssSelector("tr[name='entry'] td:nth-child(5)")).Text;
+                    contact.Homepage = null;
+                    contact.Bday = "";
+                    contact.Bmonth = "";
+                    contact.Byear = "";
+                    contact.Aday = "";
+                    contact.Amonth = "";
+                    contact.Ayear = "";
+                    contact.Address2 = null;
+                    contact.Phone2 = null;
+                    contact.Notes = null;
+
+                    contactCache.Add(contact);
+                }
+
+            }
+            return new List<ContactData>(contactCache);
+        }
+
+        public int GetContactsCount()
+        {
+            return driver.FindElements(By.CssSelector("tr[name='entry']")).Count;
+        }
+
         public ContactHelper EditContact(int index, ContactData contact)
         {
             manager.Nav.GoToContactsPage();
             SelectContact(index).InitContactEdit(index).FillContactForm(contact).SubmitUpdateContact();
-            manager.Nav.GoToContactsPage();
+            contactCache = null;
+           manager.Nav.GoToContactsPage();
             return this;
         }
 
@@ -26,6 +80,7 @@ namespace AddressbookWebTests
             SelectContact(index)
                 .InitContactRemoving(index)
                 .SubmitDeleteContact();
+            contactCache = null;
             manager.Nav.GoToContactsPage();
             return this;
         }
@@ -36,6 +91,7 @@ namespace AddressbookWebTests
             SelectContact(index)
                 .SubmitDeleteContact();
             driver.SwitchTo().Alert().Accept();
+            contactCache = null;
             manager.Nav.GoToContactsPage();
             return this;
         }
@@ -54,7 +110,7 @@ namespace AddressbookWebTests
 
         public ContactHelper SelectContact(int index)
         {
-            driver.FindElement(By.XPath("//input[@name='selected[]'][" + index + "]")).Click();
+            driver.FindElement(By.XPath("//input[@name='selected[]'][" + (index + 1) + "]")).Click();
             return this;
         }
 
@@ -66,7 +122,7 @@ namespace AddressbookWebTests
             InitNewContactCreation();
             FillContactForm(contact);
             Submit();
-            
+            contactCache = null;
             return this;
         }
 
@@ -87,12 +143,12 @@ namespace AddressbookWebTests
             Type(By.Name("email2"), contact.Email2);
             Type(By.Name("email3"), contact.Email3);
             Type(By.Name("homepage"), contact.Homepage);
-            new SelectElement(driver.FindElement(By.Name("bday"))).SelectByText(contact.Bday);
-            new SelectElement(driver.FindElement(By.Name("bmonth"))).SelectByText(contact.Bmonth);
-            Type(By.Name("byear"), contact.Byear);
-            new SelectElement(driver.FindElement(By.Name("aday"))).SelectByText(contact.Aday);
-            new SelectElement(driver.FindElement(By.Name("amonth"))).SelectByText(contact.Amonth);
-            Type(By.Name("ayear"), contact.Ayear);
+//            new SelectElement(driver.FindElement(By.Name("bday"))).SelectByText(contact.Bday);
+//            new SelectElement(driver.FindElement(By.Name("bmonth"))).SelectByText(contact.Bmonth);
+//            Type(By.Name("byear"), contact.Byear);
+//            new SelectElement(driver.FindElement(By.Name("aday"))).SelectByText(contact.Aday);
+//            new SelectElement(driver.FindElement(By.Name("amonth"))).SelectByText(contact.Amonth);
+//            Type(By.Name("ayear"), contact.Ayear);
             Type(By.Name("address2"), contact.Address2);
             Type(By.Name("phone2"), contact.Phone2);
             Type(By.Name("notes"), contact.Notes);
@@ -115,24 +171,10 @@ namespace AddressbookWebTests
 
         public ContactHelper InitContactEdit(int index)
         {
-            driver.FindElements(By.CssSelector("*[title='Edit']"))[index - 1].Click();
+            driver.FindElements(By.CssSelector("*[title='Edit']"))[index].Click();
             return this;
         }
 
-        public string[] GetContactNames()
-        {
-            manager.Wait.WaitForText("Number of results:");
-            // only firstname text  
-            System.Collections.Generic.IList<IWebElement> all = driver.FindElements(By.CssSelector("tr[name='entry'] td:nth-of-type(2)"));
-            String[] contactNames = new String[all.Count];
-            int i = 0;
-            foreach (IWebElement element in all)
-            {
-                contactNames[i++] = element.Text;
-            }
-
-            return contactNames;
-        }
 
         public bool IsAtLeastOneContact()
         {

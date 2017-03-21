@@ -1,17 +1,21 @@
-﻿namespace AddressbookWebTests
+﻿using System;
+
+namespace AddressbookWebTests
 {
-    public class GroupData
+    public class GroupData : IEquatable<GroupData>, IComparable<GroupData>
     {
         private string name;
         private string header;
         private string footer;
         private string parentGroupName;
+        private string groupId;
 
         public GroupData( 
             string name = "",
             string header = "",
             string footer = "",
-            string parentGroupName = "[none]"
+            string parentGroupName = "[none]",
+            string groupId = null
 
             )
         {
@@ -20,59 +24,50 @@
             this.header = header + timestamp;
             this.footer = footer + timestamp;
             this.parentGroupName = parentGroupName;
+            this.groupId = groupId;
 
         }
 
-        public string Name
-        {
-            get
-            {
-                return name;
-            }
+        public string Name { get; set; }
 
-            set
+        public string Header { get; set; }
+
+        public string Footer { get; set; }
+
+        public string ParentGroupName { get; set; }
+
+        public string GroupId { get; set; }
+
+        public bool Equals(GroupData other)
+        {
+            if(object.ReferenceEquals(other, null))
             {
-                name = value;
+                return false;
             }
+            if(object.ReferenceEquals(this, other))
+            {
+                return true;
+            }
+            return (Name == other.Name) && (GroupId == other.GroupId);
         }
 
-        public string Header
+        public override int GetHashCode()
         {
-            get
-            {
-                return header;
-            }
-
-            set
-            {
-                header = value;
-            }
+            return Name.GetHashCode();
+        }
+    
+        public override string ToString()
+        {
+            return "name=" + Name + ", id=" + GroupId;
         }
 
-        public string Footer
+        public int CompareTo(GroupData other)
         {
-            get
+            if (Object.ReferenceEquals(other, null))
             {
-                return footer;
+                return 1;
             }
-
-            set
-            {
-                footer = value;
-            }
-        }
-
-        public string ParentGroupName
-        {
-            get
-            {
-                return parentGroupName;
-            }
-
-            set
-            {
-                parentGroupName = value;
-            }
+            return ToString().CompareTo(other.ToString());
         }
     }
 }

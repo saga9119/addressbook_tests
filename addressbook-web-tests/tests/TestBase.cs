@@ -15,6 +15,7 @@ namespace AddressbookWebTests
             {
                 app.Auth.Logout();
             }
+
         }
     }
 }
