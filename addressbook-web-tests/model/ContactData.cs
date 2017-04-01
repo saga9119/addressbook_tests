@@ -122,8 +122,6 @@ namespace AddressbookWebTests
 
         public string Email3 { get; set; }
 
-        public string Homepage { get; set; }
-
         public string Bday { get; set; }
 
         public string Bmonth { get; set; }
@@ -142,6 +140,8 @@ namespace AddressbookWebTests
 
         public string Notes { get; set; }
 
+        public string Homepage { get; set; }
+        
         public string AllEmails
         {
             get
