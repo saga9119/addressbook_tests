@@ -2,6 +2,7 @@
 using OpenQA.Selenium.Support.UI;
 using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace AddressbookWebTests
 {
@@ -13,6 +14,64 @@ namespace AddressbookWebTests
 
 
         private List<ContactData> contactCache = null;
+
+        public ContactData GetContactInformationFromTable(int index)
+        {
+            manager.Nav.GoToContactsPage();
+            IList<IWebElement> cells = driver.FindElements(By.Name("entry"))[index]
+                .FindElements(By.TagName("td"));
+            string lastname = cells[1].Text;
+            string firstname = cells[2].Text;
+            string address = cells[3].Text;
+            string allEmails = cells[4].Text;
+            string allPhones = cells[5].Text;
+
+            return new ContactData()
+            {
+                Firstname = firstname,
+                Lastname = lastname,
+                Address = address,
+                AllEmails = allEmails,
+                AllPhones = allPhones
+            };
+
+        }
+
+        public ContactData GetContactInformationFromEditForm(int index)
+        {
+            manager.Nav.OpenHomePage();
+            InitContactEdit(index);
+
+            
+            return new ContactData()
+            {
+                Firstname = driver.FindElement(By.Name("firstname")).GetAttribute("value"),
+                //string middlename = driver.FindElement(By.Name("middlename")).GetAttribute("value");
+                Lastname = driver.FindElement(By.Name("lastname")).GetAttribute("value"),
+                //string nickname = driver.FindElement(By.Name("nickname")).GetAttribute("value");
+                //string title = driver.FindElement(By.Name("title")).GetAttribute("value");
+                //string company = driver.FindElement(By.Name("company")).GetAttribute("value");
+                Address = driver.FindElement(By.Name("address")).GetAttribute("value"),
+                Home = driver.FindElement(By.Name("home")).GetAttribute("value"),
+                Mobile = driver.FindElement(By.Name("mobile")).GetAttribute("value"),
+                Work = driver.FindElement(By.Name("work")).GetAttribute("value"),
+                Phone2 = driver.FindElement(By.Name("phone2")).GetAttribute("value"),
+                //string fax = driver.FindElement(By.Name("fax")).GetAttribute("value");
+                Email = driver.FindElement(By.Name("email")).GetAttribute("value"),
+                Email2 = driver.FindElement(By.Name("email2")).GetAttribute("value"),
+                Email3 = driver.FindElement(By.Name("email3")).GetAttribute("value")
+                //string homepage = driver.FindElement(By.Name("homepage")).GetAttribute("value");
+                //string bday = driver.FindElement(By.Name("bday")).GetAttribute("value");
+                //string bmonth = driver.FindElement(By.Name("bmonth")).GetAttribute("value");
+                //string year = driver.FindElement(By.Name("year")).GetAttribute("value");
+                //string aday = driver.FindElement(By.Name("aday")).GetAttribute("value");
+                //string amonth = driver.FindElement(By.Name("amonth")).GetAttribute("value");
+                //string ayear = driver.FindElement(By.Name("ayear")).GetAttribute("value");
+                //string address2 = driver.FindElement(By.Name("address2")).GetAttribute("value");
+                //string notes = driver.FindElement(By.Name("notes")).GetAttribute("value");
+            };
+
+    }
 
         public List<ContactData> GetContactsList()
         {
@@ -180,6 +239,14 @@ namespace AddressbookWebTests
         {
             manager.Nav.GoToContactsPage();
             return IsElementPresent(By.CssSelector("*[name='selected[]']"));
+        }
+
+        public int GetNumOfSearchResults()
+        {
+            manager.Nav.GoToContactsPage();
+            string text = driver.FindElement(By.TagName("label")).Text;
+            Match m = new Regex(@"\d+").Match(text);
+            return Int32.Parse(m.Value);
         }
     }
 }

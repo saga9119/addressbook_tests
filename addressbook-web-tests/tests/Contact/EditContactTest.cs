@@ -10,10 +10,12 @@ namespace AddressbookWebTests
         [Test]
         public void ContactModificationTest()
         {
-            ContactData contact = new ContactData();
+
             long timestamp = System.Diagnostics.Stopwatch.GetTimestamp();
-            contact.Lastname = "lastname" + timestamp;
-            contact.Firstname = "firstname" + timestamp;
+            ContactData contact = new ContactData() {
+                Lastname = "lastname" + timestamp,
+                Firstname = "firstname" + timestamp
+        };
             app.Nav.GoToContactsPage();
 
             List<ContactData> oldContacts = app.Contact.GetContactsList();
@@ -22,7 +24,7 @@ namespace AddressbookWebTests
 
             List<ContactData> newContacts = app.Contact.GetContactsList();
             newContacts.Sort();
-            contact.ContactId = newContacts[newContacts.Count - 1].ContactId;
+            contact.ContactId = newContacts.Find(c => (c.Lastname == contact.Lastname)).ContactId;
             oldContacts[0] = contact;
             oldContacts.Sort();
             Assert.AreEqual(oldContacts, newContacts);

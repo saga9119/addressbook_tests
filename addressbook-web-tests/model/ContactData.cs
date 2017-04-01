@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text.RegularExpressions;
+
 namespace AddressbookWebTests
 {
     public class ContactData : IEquatable<ContactData>, IComparable<ContactData>
@@ -28,6 +30,8 @@ namespace AddressbookWebTests
         private string phone2;
         private string notes;
         private string contactId;
+        private string allEmails;
+        private string allPhones;
 
 
         public ContactData(
@@ -138,6 +142,59 @@ namespace AddressbookWebTests
 
         public string Notes { get; set; }
 
+        public string AllEmails
+        {
+            get
+            {
+                if (allEmails == null )
+                {
+                    return (Cleanup(Email) + Cleanup(Email2) + Cleanup(Email3)).Trim();
+                }
+                else
+                {
+                    return allEmails;
+                }
+            }
+
+            set
+            {
+                allEmails = value;
+            }
+        }
+
+        public string AllPhones {
+            get
+            {
+                if (allPhones == null)
+                {
+                    return (Cleanup(Home) + Cleanup(Mobile) + Cleanup(Work) + Cleanup(Phone2)).Trim();
+                }
+                else
+                {
+                    return allPhones;
+                }
+            }
+
+            set
+            {
+                allPhones = value;
+            }
+        }
+
+        private string Cleanup(string str)
+        {
+            if (str == null || str == "")
+            {
+                return "";
+            }
+            else
+            {
+                return Regex.Replace(str, "[ -()]", "") + "\r\n";
+            }
+
+        }
+
+
         public bool Equals(ContactData other)
         {
             if (object.ReferenceEquals(other, null))
@@ -148,7 +205,8 @@ namespace AddressbookWebTests
             {
                 return true;
             }
-            return (ContactId == other.ContactId) && (Lastname == other.Lastname) && (Firstname == other.Firstname);
+            return (ContactId == other.ContactId) && (Lastname == other.Lastname)
+                && (Firstname == other.Firstname);
         }
 
         public override int GetHashCode()

@@ -36,13 +36,19 @@ namespace AddressbookWebTests
         public bool IsLoggedIn(AccountData account)
         {
             return IsLoggedIn() && 
-                IsElementPresent(By.XPath("//b[text()='("+account.Username+")']"));
+                (GetLoggedUserName() == account.Username);
         }
 
         public LoginHelper Logout()
         {
             driver.FindElement(By.LinkText("Logout")).Click();
             return this;
+        }
+
+        public string GetLoggedUserName()
+        {
+            string text = driver.FindElement(By.Name("logout")).FindElement(By.TagName("b")).Text;
+            return text.Substring(1, text.Length - 2);
         }
 
     }

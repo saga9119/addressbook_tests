@@ -14,17 +14,18 @@ namespace AddressbookWebTests
             app.Nav.GoToGroupsPage();
             List<GroupData> oldGroups = app.Group.GetGroupsList();
 
-            GroupData group = new GroupData();
             long timestamp = System.Diagnostics.Stopwatch.GetTimestamp();
-            group.Name = "name_edited_at" + timestamp;
-            group.Header = "header_edited_at" + timestamp;
-            group.Footer = "footer_edited_at" + timestamp;
-
+            GroupData group = new GroupData() {
+                Name = "name_edited_at" + timestamp,
+                Header = "header_edited_at" + timestamp,
+                Footer = "footer_edited_at" + timestamp
+        };
+            
             app.Group.EditGroup(0, group);
             Assert.AreEqual(app.Group.GetGroupsCount(), oldGroups.Count);
 
             List<GroupData> newGroups = app.Group.GetGroupsList();
-            group.GroupId = oldGroups[0].GroupId;
+            group.GroupId = newGroups.Find(g => (g.Name == group.Name)).GroupId;
             oldGroups[0] = group;
             oldGroups.Sort();
             newGroups.Sort();

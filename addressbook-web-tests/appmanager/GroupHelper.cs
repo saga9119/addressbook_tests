@@ -33,16 +33,32 @@ namespace AddressbookWebTests
                 ICollection<IWebElement> elements = driver.FindElements(By.CssSelector("span.group"));
                 foreach (IWebElement element in elements)
                 {
-                    GroupData group = new GroupData();
-                    group.Name = element.Text;
-                    group.Header = null;
-                    group.Footer = null;
-                    group.ParentGroupName = null;
-                    group.GroupId = element.FindElement(By.TagName("input")).GetAttribute("value");
+                    groupCache.Add( new GroupData()
+                    {
+                        Name = element.Text,
+                        Header = null,
+                        Footer = null,
+                        ParentGroupName = null,
+                        GroupId = element.FindElement(By.TagName("input")).GetAttribute("value")
 
-                    groupCache.Add(group);
+                    });
                 }
-                
+                    string allGroupNames = driver.FindElement(By.CssSelector("div#content form")).Text;
+                    string[] parts = allGroupNames.Split('\n');
+                int shift = groupCache.Count - parts.Length;
+                    for(int i = 0; i < groupCache.Count; i++)
+                    {
+                        if(i < shift)
+                    {
+                        groupCache[i].Name = "";
+                    }
+                        else
+                    {
+                        groupCache[i].Name = parts[i - shift].Trim();
+                    }
+                    
+
+                    }
             }
             return  new List<GroupData>(groupCache);
         }
