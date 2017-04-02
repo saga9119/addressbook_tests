@@ -7,13 +7,24 @@ namespace AddressbookWebTests
     public class CreateContactTests : AuthTestBase
     {
 
-        [Test]
-        public void CreateContactWithoutGroupTestTest()
+        public static IEnumerable<ContactData> RandomContactDataProvider()
+        {
+            List<ContactData> contacts = new List<ContactData>();
+            for (int i = 0; i < 5; i++)
+            {
+                ContactData contact = new ContactData().AutoFill();
+                contact.Firstname = GenerateRandomString(30);
+                contact.Lastname = GenerateRandomString(30);
+                contacts.Add(contact);
+            }
+            return contacts;
+        }
+
+
+        [Test, TestCaseSource("RandomContactDataProvider")]
+        public void CreateContactWithoutGroupTestTest(ContactData contact)
         {
             List<ContactData> oldContacts = app.Contact.GetContactsList();
-            ContactData contact = new ContactData().AutoFill();
-        
-
             app.Contact.CreateContact(contact);
 
             app.Nav.GoToContactsPage();

@@ -58,7 +58,11 @@ namespace AddressbookWebTests
     
         public override string ToString()
         {
-            return "name=" + Name + ", id=" + GroupId;
+            return "\nName=" + Name 
+                + "\nHeader="+ Header 
+                + "\nFooter=" + Footer 
+                + "\nParentGroupName=" + ParentGroupName 
+                + "\nId=" + GroupId;
         }
 
         public int CompareTo(GroupData other)
