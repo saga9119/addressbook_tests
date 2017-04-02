@@ -32,6 +32,7 @@ namespace AddressbookWebTests
         private string contactId;
         private string allEmails;
         private string allPhones;
+        private string card;
 
 
         public ContactData(
@@ -60,14 +61,14 @@ namespace AddressbookWebTests
             string phone2 = "phone2",
             string notes = "notes",
             string contactId = ""
+
         )
 
 
         {
-            long timestamp = System.Diagnostics.Stopwatch.GetTimestamp();
             this.firstname = firstname;
             this.middlename = middlename;
-            this.lastname = lastname + timestamp;
+            this.lastname = lastname;
             this.nickname = nickname;
             this.title = title;
             this.company = company;
@@ -90,6 +91,38 @@ namespace AddressbookWebTests
             this.phone2 = phone2;
             this.notes = notes;
             this.contactId = contactId;
+
+        }
+
+        public ContactData AutoFill()
+        {
+            long timestamp = System.Diagnostics.Stopwatch.GetTimestamp();
+            this.Firstname = firstname + timestamp;
+            this.Middlename = middlename + timestamp;
+            this.Lastname = lastname + timestamp;
+            this.Nickname = nickname + timestamp;
+            this.Title = title + timestamp;
+            this.Company = company + timestamp;
+            this.Address = address + timestamp;
+            this.Home = home + timestamp;
+            this.Mobile = mobile + timestamp;
+            this.Work = work + timestamp;
+            this.Fax = fax + timestamp;
+            this.Email = timestamp + email;
+            this.Email2 = timestamp + email2;
+            this.Email3 = timestamp + email3;
+            this.Homepage = timestamp + homepage;
+            this.Bday = bday;
+            this.Bmonth = bmonth;
+            this.Byear = byear;
+            this.Aday = aday;
+            this.Amonth = amonth;
+            this.Ayear = ayear;
+            this.Address2 = address2 + timestamp;
+            this.Phone2 = phone2 + timestamp;
+            this.Notes = notes + timestamp;
+            this.ContactId = contactId;
+            return this;
         }
 
         public string ContactId { get; set; }
@@ -194,6 +227,56 @@ namespace AddressbookWebTests
 
         }
 
+        public string Card
+        {
+            get
+            {
+                if (card == null || card == "")
+                {
+
+                    return ((Firstname == "" ? "" : Firstname )
+                        + (Middlename == "" ? "" : Middlename )
+                        + (Lastname == "" ? "" :  Lastname)
+                        + (Nickname == "" ? "" : Nickname )
+                        + (Title == "" ? "" : Title)
+                        
+                        + (Company == "" ? "" :  Company)
+
+                        + (Address == "" ? "" : Address)
+
+                        + (Home == "" ? "" : "H: " + Home )
+
+                        + (Mobile == "" ? "" : "M: " + Mobile)
+
+                        + (Work == "" ? "" : "W: " + Work)
+
+                        + (Fax == "" ? "" : "F: " + Fax )
+
+                        + (Email == "" ? "" : Email )
+
+                        + (Email2 == "" ? "": Email2 )
+
+                        + (Email3 == "" ? "" : Email3)
+
+                        + (Homepage == "" ? "" : "Homepage:\r\n" + Homepage )
+
+                        + (Address2 =="" ? "" : Address2 )
+
+                        + (Phone2 == "" ? "" : "P: " + Phone2)
+                        
+                        + (Notes == "" ? "" : Notes)).Replace("\r\n", "").Replace(" ", "");
+                }
+                else
+                {
+                    return card;
+                }
+            }
+
+            set
+            {
+                card = value;
+            }
+        }
 
         public bool Equals(ContactData other)
         {

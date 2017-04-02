@@ -20,5 +20,14 @@ namespace AddressbookWebTests
             Assert.AreEqual(fromTable.Homepage, "http://" + fromForm.Homepage + "/");
 
         }
+
+        [Test]
+        public void CheckCardInformationTest()
+        {
+            ContactData fromCard = app.Contact.GetContactInformationFromCard(0);
+            ContactData fromForm = app.Contact.GetContactInformationFromEditForm(0);
+
+            Assert.AreEqual(fromCard.Card, fromForm.Card);
+        }
     }
 }

@@ -39,6 +39,17 @@ namespace AddressbookWebTests
 
         }
 
+        public ContactData GetContactInformationFromCard(int index)
+        {
+            manager.Nav.OpenHomePage();
+            ViewContactCard(index);
+            return new ContactData()
+            {
+                Card = driver.FindElement(By.CssSelector("div#content")).Text.Replace("\r\n", "").Replace(" ", "")
+            };
+            
+        }
+
         public ContactData GetContactInformationFromEditForm(int index)
         {
             manager.Nav.OpenHomePage();
@@ -236,6 +247,11 @@ namespace AddressbookWebTests
             return this;
         }
 
+        public ContactHelper ViewContactCard(int index)
+        {
+            driver.FindElements(By.CssSelector("*[title='Details']"))[index].Click();
+            return this;
+        }
 
         public bool IsAtLeastOneContact()
         {
