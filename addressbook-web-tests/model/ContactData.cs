@@ -1,6 +1,9 @@
-﻿namespace AddressbookWebTests
+﻿using System;
+using System.Text.RegularExpressions;
+
+namespace AddressbookWebTests
 {
-    public class ContactData
+    public class ContactData : IEquatable<ContactData>, IComparable<ContactData>
     {
         private string firstname;
         private string middlename;
@@ -26,6 +29,10 @@
         private string address2;
         private string phone2;
         private string notes;
+        private string contactId;
+        private string allEmails;
+        private string allPhones;
+        private string card;
 
 
         public ContactData(
@@ -52,15 +59,16 @@
             string ayear = "1990",
             string address2 = "address2",
             string phone2 = "phone2",
-            string notes = "notes"
+            string notes = "notes",
+            string contactId = ""
+
         )
 
 
         {
-            long timestamp = System.Diagnostics.Stopwatch.GetTimestamp();
-            this.firstname = firstname + timestamp;
-            this.middlename = middlename + timestamp;
-            this.lastname = lastname + timestamp;
+            this.firstname = firstname;
+            this.middlename = middlename;
+            this.lastname = lastname;
             this.nickname = nickname;
             this.title = title;
             this.company = company;
@@ -82,319 +90,225 @@
             this.address2 = address2;
             this.phone2 = phone2;
             this.notes = notes;
+            this.contactId = contactId;
+
         }
 
+        public ContactData AutoFill()
+        {
+            long timestamp = System.Diagnostics.Stopwatch.GetTimestamp();
+            this.Firstname = firstname + timestamp;
+            this.Middlename = middlename + timestamp;
+            this.Lastname = lastname + timestamp;
+            this.Nickname = nickname + timestamp;
+            this.Title = title + timestamp;
+            this.Company = company + timestamp;
+            this.Address = address + timestamp;
+            this.Home = home + timestamp;
+            this.Mobile = mobile + timestamp;
+            this.Work = work + timestamp;
+            this.Fax = fax + timestamp;
+            this.Email = timestamp + email;
+            this.Email2 = timestamp + email2;
+            this.Email3 = timestamp + email3;
+            this.Homepage = timestamp + homepage;
+            this.Bday = bday;
+            this.Bmonth = bmonth;
+            this.Byear = byear;
+            this.Aday = aday;
+            this.Amonth = amonth;
+            this.Ayear = ayear;
+            this.Address2 = address2 + timestamp;
+            this.Phone2 = phone2 + timestamp;
+            this.Notes = notes + timestamp;
+            this.ContactId = contactId;
+            return this;
+        }
 
-        public string Firstname
+        public string ContactId { get; set; }
+
+        public string Firstname { get; set; }
+        
+        public string Middlename { get; set; }
+
+        public string Lastname { get; set; }
+
+        public string Nickname { get; set; }
+
+        public string Title { get; set; }
+
+        public string Company { get; set; }
+
+        public string Address { get; set; }
+
+        public string Home { get; set; }
+
+        public string Mobile { get; set; }
+
+        public string Work { get; set; }
+
+        public string Fax { get; set; }
+
+        public string Email { get; set; }
+
+        public string Email2 { get; set; }
+
+        public string Email3 { get; set; }
+
+        public string Bday { get; set; }
+
+        public string Bmonth { get; set; }
+
+        public string Byear { get; set; }
+
+        public string Aday { get; set; }
+
+        public string Amonth { get; set; }
+
+        public string Ayear { get; set; }
+
+        public string Address2 { get; set; }
+
+        public string Phone2 { get; set; }
+
+        public string Notes { get; set; }
+
+        public string Homepage { get; set; }
+        
+        public string AllEmails
         {
             get
             {
-                return firstname;
+                if (allEmails == null )
+                {
+                    return (Cleanup(Email) + Cleanup(Email2) + Cleanup(Email3)).Trim();
+                }
+                else
+                {
+                    return allEmails;
+                }
             }
 
             set
             {
-                firstname = value;
+                allEmails = value;
             }
         }
 
-        public string Middlename
-        {
+        public string AllPhones {
             get
             {
-                return middlename;
+                if (allPhones == null)
+                {
+                    return (Cleanup(Home) + Cleanup(Mobile) + Cleanup(Work) + Cleanup(Phone2)).Trim();
+                }
+                else
+                {
+                    return allPhones;
+                }
             }
 
             set
             {
-                middlename = value;
+                allPhones = value;
             }
         }
 
-        public string Lastname
+        private string Cleanup(string str)
+        {
+            if (str == null || str == "")
+            {
+                return "";
+            }
+            else
+            {
+                return Regex.Replace(str, "[ -()]", "") + "\r\n";
+            }
+
+        }
+
+        public string Card
         {
             get
             {
-                return lastname;
+                if (card == null || card == "")
+                {
+
+                    return ((Firstname == "" ? "" : Firstname )
+                        + (Middlename == "" ? "" : Middlename )
+                        + (Lastname == "" ? "" :  Lastname)
+                        + (Nickname == "" ? "" : Nickname )
+                        + (Title == "" ? "" : Title)
+                        
+                        + (Company == "" ? "" :  Company)
+
+                        + (Address == "" ? "" : Address)
+
+                        + (Home == "" ? "" : "H: " + Home )
+
+                        + (Mobile == "" ? "" : "M: " + Mobile)
+
+                        + (Work == "" ? "" : "W: " + Work)
+
+                        + (Fax == "" ? "" : "F: " + Fax )
+
+                        + (Email == "" ? "" : Email )
+
+                        + (Email2 == "" ? "": Email2 )
+
+                        + (Email3 == "" ? "" : Email3)
+
+                        + (Homepage == "" ? "" : "Homepage:\r\n" + Homepage )
+
+                        + (Address2 =="" ? "" : Address2 )
+
+                        + (Phone2 == "" ? "" : "P: " + Phone2)
+                        
+                        + (Notes == "" ? "" : Notes)).Replace("\r\n", "").Replace(" ", "");
+                }
+                else
+                {
+                    return card;
+                }
             }
 
             set
             {
-                lastname = value;
+                card = value;
             }
         }
 
-        public string Nickname
+        public bool Equals(ContactData other)
         {
-            get
+            if (object.ReferenceEquals(other, null))
             {
-                return nickname;
+                return false;
             }
-
-            set
+            if (object.ReferenceEquals(this, other))
             {
-                nickname = value;
+                return true;
             }
+            return (ContactId == other.ContactId) && (Lastname == other.Lastname)
+                && (Firstname == other.Firstname);
         }
 
-        public string Title
+        public override int GetHashCode()
         {
-            get
-            {
-                return title;
-            }
-
-            set
-            {
-                title = value;
-            }
+            return ContactId.GetHashCode();
         }
 
-        public string Company
+        public override string ToString()
         {
-            get
-            {
-                return company;
-            }
-
-            set
-            {
-                company = value;
-            }
+            return "id=" + ContactId + ", lastname=" + Lastname + ", firstname=" + Firstname;
         }
 
-        public string Address
+        public int CompareTo(ContactData other)
         {
-            get
+            if (Object.ReferenceEquals(other, null))
             {
-                return address;
+                return 1;
             }
-
-            set
-            {
-                address = value;
-            }
-        }
-
-        public string Home
-        {
-            get
-            {
-                return home;
-            }
-
-            set
-            {
-                home = value;
-            }
-        }
-
-        public string Mobile
-        {
-            get
-            {
-                return mobile;
-            }
-
-            set
-            {
-                mobile = value;
-            }
-        }
-
-        public string Work
-        {
-            get
-            {
-                return work;
-            }
-
-            set
-            {
-                work = value;
-            }
-        }
-
-        public string Fax
-        {
-            get
-            {
-                return fax;
-            }
-
-            set
-            {
-                fax = value;
-            }
-        }
-
-        public string Email
-        {
-            get
-            {
-                return email;
-            }
-
-            set
-            {
-                email = value;
-            }
-        }
-
-        public string Email2
-        {
-            get
-            {
-                return email2;
-            }
-
-            set
-            {
-                email2 = value;
-            }
-        }
-
-        public string Email3
-        {
-            get
-            {
-                return email3;
-            }
-
-            set
-            {
-                email3 = value;
-            }
-        }
-
-        public string Homepage
-        {
-            get
-            {
-                return homepage;
-            }
-
-            set
-            {
-                homepage = value;
-            }
-        }
-
-        public string Bday
-        {
-            get
-            {
-                return bday;
-            }
-
-            set
-            {
-                bday = value;
-            }
-        }
-
-        public string Bmonth
-        {
-            get
-            {
-                return bmonth;
-            }
-
-            set
-            {
-                bmonth = value;
-            }
-        }
-
-        public string Byear
-        {
-            get
-            {
-                return byear;
-            }
-
-            set
-            {
-                byear = value;
-            }
-        }
-
-        public string Aday
-        {
-            get
-            {
-                return aday;
-            }
-
-            set
-            {
-                aday = value;
-            }
-        }
-
-        public string Amonth
-        {
-            get
-            {
-                return amonth;
-            }
-
-            set
-            {
-                amonth = value;
-            }
-        }
-
-        public string Ayear
-        {
-            get
-            {
-                return ayear;
-            }
-
-            set
-            {
-                ayear = value;
-            }
-        }
-
-        public string Address2
-        {
-            get
-            {
-                return address2;
-            }
-
-            set
-            {
-                address2 = value;
-            }
-        }
-
-        public string Phone2
-        {
-            get
-            {
-                return phone2;
-            }
-
-            set
-            {
-                phone2 = value;
-            }
-        }
-
-        public string Notes
-        {
-            get
-            {
-                return notes;
-            }
-
-            set
-            {
-                notes = value;
-            }
+            return ToString().CompareTo(other.ToString());
         }
     }
 }

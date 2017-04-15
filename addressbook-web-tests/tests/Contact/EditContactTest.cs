@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-
+using System.Collections.Generic;
 
 namespace AddressbookWebTests
 {
@@ -10,17 +10,24 @@ namespace AddressbookWebTests
         [Test]
         public void ContactModificationTest()
         {
-            ContactData contact = new ContactData();
-            contact.Lastname = "edited" + System.Diagnostics.Stopwatch.GetTimestamp();
 
+            long timestamp = System.Diagnostics.Stopwatch.GetTimestamp();
+            ContactData contact = new ContactData() {
+                Lastname = "lastname" + timestamp,
+                Firstname = "firstname" + timestamp
+        };
             app.Nav.GoToContactsPage();
 
-            string[] oldContacts = app.Contact.GetContactNames();
-            string[] editedContacts = app.Contact.EditContact(1, contact).GetContactNames();
+            List<ContactData> oldContacts = app.Contact.GetContactsList();
+            app.Contact.EditContact(0, contact);
+            Assert.AreEqual(oldContacts.Count, app.Contact.GetContactsCount());
 
-            Assert.Contains(contact.Lastname, editedContacts);
-            Assert.True(oldContacts.Length == editedContacts.Length, "Editing of contact changed number of contacts");
-            Assert.That(editedContacts, Has.No.Member(oldContacts[0]));
+            List<ContactData> newContacts = app.Contact.GetContactsList();
+            newContacts.Sort();
+            contact.ContactId = newContacts.Find(c => (c.Lastname == contact.Lastname)).ContactId;
+            oldContacts[0] = contact;
+            oldContacts.Sort();
+            Assert.AreEqual(oldContacts, newContacts);
         }
     }
 }

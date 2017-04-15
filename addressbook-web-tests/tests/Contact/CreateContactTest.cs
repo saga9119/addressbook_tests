@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-
+using System.Collections.Generic;
 
 namespace AddressbookWebTests
 {
@@ -7,12 +7,34 @@ namespace AddressbookWebTests
     public class CreateContactTests : AuthTestBase
     {
 
-        [Test]
-        public void CreateContactWithoutGroupTestTest()
+        public static IEnumerable<ContactData> RandomContactDataProvider()
         {
-            ContactData contact = new ContactData();
-            string[] contacts = app.Contact.CreateContact(contact).GetContactNames();
-            Assert.Contains(contact.Lastname, contacts);
+            List<ContactData> contacts = new List<ContactData>();
+            for (int i = 0; i < 5; i++)
+            {
+                ContactData contact = new ContactData().AutoFill();
+                contact.Firstname = GenerateRandomString(30);
+                contact.Lastname = GenerateRandomString(30);
+                contacts.Add(contact);
+            }
+            return contacts;
+        }
+
+
+        [Test, TestCaseSource("RandomContactDataProvider")]
+        public void CreateContactWithoutGroupTestTest(ContactData contact)
+        {
+            List<ContactData> oldContacts = app.Contact.GetContactsList();
+            app.Contact.CreateContact(contact);
+
+            app.Nav.GoToContactsPage();
+            Assert.AreEqual(oldContacts.Count + 1, app.Contact.GetContactsCount());
+            List<ContactData> newContacts = app.Contact.GetContactsList();
+            newContacts.Sort();
+            contact.ContactId = newContacts.Find(c => (c.Lastname == contact.Lastname)).ContactId;
+            oldContacts.Add(contact);
+            oldContacts.Sort();
+            Assert.AreEqual(oldContacts, newContacts);
         }
     }
 }

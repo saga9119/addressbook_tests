@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-
+using System.Collections.Generic;
 
 namespace AddressbookWebTests
 {
@@ -9,13 +9,36 @@ namespace AddressbookWebTests
         [Test]
         public void ContactRemovingTest()
         {
-            app.Contact.DeleteContact(1);
+            List<ContactData> oldContacts = app.Contact.GetContactsList();
+            app.Contact.DeleteContact(0);
+            app.Nav.GoToContactsPage();
+            Assert.AreEqual(oldContacts.Count - 1, app.Contact.GetContactsCount());
+
+            List<ContactData> newContacts = app.Contact.GetContactsList();
+            List<ContactData> contacts = new List<ContactData>(oldContacts);
+            contacts.RemoveAt(0);
+            contacts.Sort();
+            newContacts.Sort();
+            Assert.AreEqual(contacts, newContacts);
+
+
+
         }
 
         [Test]
         public void ContactRemovingFromListTest()
         {
-            app.Contact.DeleteContactFromList(1);
+            List<ContactData> oldContacts = app.Contact.GetContactsList();
+            app.Contact.DeleteContactFromList(0);
+            app.Nav.GoToContactsPage();
+            Assert.AreEqual(oldContacts.Count - 1, app.Contact.GetContactsCount());
+
+            List<ContactData> newContacts = app.Contact.GetContactsList();
+            List<ContactData> contacts = new List<ContactData>(oldContacts);
+            contacts.RemoveAt(0);
+            contacts.Sort();
+            newContacts.Sort();
+            Assert.AreEqual(contacts, newContacts);
         }
 
     }

@@ -71,6 +71,8 @@
     <Compile Include="appmanager\BaseHelper.cs" />
     <Compile Include="model\ContactData.cs" />
     <Compile Include="tests\ContactTestBase.cs" />
+    <Compile Include="tests\Contact\ContactSearchTest.cs" />
+    <Compile Include="tests\Contact\ContactInformationTest.cs" />
     <Compile Include="tests\GroupTestBase.cs" />
     <Compile Include="tests\AuthTestBase.cs" />
     <Compile Include="tests\Contact\CreateContactTest.cs" />
