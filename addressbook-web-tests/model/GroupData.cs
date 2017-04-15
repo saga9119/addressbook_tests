@@ -10,6 +10,10 @@ namespace AddressbookWebTests
         private string parentGroupName;
         private string groupId;
 
+        public GroupData()
+        {
+        }
+
         public GroupData( 
             string name = "",
             string header = "",

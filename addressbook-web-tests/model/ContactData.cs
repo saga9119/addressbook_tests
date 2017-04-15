@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Xml;
 using System.Text.RegularExpressions;
+using System.Xml.Serialization;
 
 namespace AddressbookWebTests
 {
@@ -34,6 +36,7 @@ namespace AddressbookWebTests
         private string allPhones;
         private string card;
 
+        public ContactData() {}
 
         public ContactData(
             string firstname = "firstname",
@@ -125,10 +128,11 @@ namespace AddressbookWebTests
             return this;
         }
 
+
         public string ContactId { get; set; }
 
         public string Firstname { get; set; }
-        
+
         public string Middlename { get; set; }
 
         public string Lastname { get; set; }
@@ -174,7 +178,7 @@ namespace AddressbookWebTests
         public string Notes { get; set; }
 
         public string Homepage { get; set; }
-        
+
         public string AllEmails
         {
             get
