@@ -13,6 +13,15 @@ namespace AddressbookWebTests
 
         }
 
+        public GroupHelper DeleteGroup(GroupData group)
+        {
+            manager.Nav.GoToGroupsPage();
+            SelectGroup(group).SubmitDelete();
+            groupCache = null;
+            manager.Nav.ReturnToGroupsPage();
+            return this;
+        }
+
         public GroupHelper DeleteGroup(int index)
         {
             manager.Nav.GoToGroupsPage();
@@ -87,6 +96,13 @@ namespace AddressbookWebTests
         public GroupHelper SelectGroup(int index)
         {
             driver.FindElement(By.XPath("//input[@name='selected[]'][" + (index + 1) + "]")).Click();
+            return this;
+        }
+
+        public GroupHelper SelectGroup(GroupData group)
+        {
+            int id = Convert.ToInt32(group.GroupId);
+            driver.FindElement(By.XPath("//input[@name='selected[]' and @value='" + id + "']")).Click();
             return this;
         }
 

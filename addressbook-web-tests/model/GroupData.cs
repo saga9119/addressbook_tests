@@ -1,7 +1,12 @@
 ﻿using System;
+using LinqToDB;
+using System.Linq;
+using LinqToDB.Mapping;
+using System.Collections.Generic;
 
 namespace AddressbookWebTests
 {
+    [Table(Name = "group_list")]
     public class GroupData : IEquatable<GroupData>, IComparable<GroupData>
     {
         private string name;
@@ -31,15 +36,19 @@ namespace AddressbookWebTests
             this.groupId = groupId;
 
         }
-
+        [Column(Name = "group_name")]
         public string Name { get; set; }
 
+        [Column(Name = "group_header")]
         public string Header { get; set; }
 
+        [Column(Name = "group_footer")]
         public string Footer { get; set; }
+
 
         public string ParentGroupName { get; set; }
 
+        [Column(Name = "group_id"), PrimaryKey, Identity]
         public string GroupId { get; set; }
 
         public bool Equals(GroupData other)
@@ -77,5 +86,24 @@ namespace AddressbookWebTests
             }
             return ToString().CompareTo(other.ToString());
         }
+
+        public static List<GroupData> GetAllFromDB()
+        {
+            using (AddressbookDB db = new AddressbookDB())
+            {
+                return (from g in db.Groups select g).ToList();
+            }
+        }
+
+        public List<ContactData> GetContacts()
+        {
+            using (AddressbookDB db = new AddressbookDB())
+            {
+                return (from c in db.Contacts
+                        from gcr in db.GroupContactRelation.Where(p => p.GroupId == GroupId && p.ContactId == c.ContactId && c.Deprecated == "0000-00-00 00:00:00")
+                        select c).Distinct().ToList();
+            }
+        }
     }
+
 }

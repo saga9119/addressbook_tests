@@ -39,6 +39,52 @@ namespace AddressbookWebTests
 
         }
 
+        public void RemoveContactFromGroup(ContactData contact, GroupData group)
+        {
+            manager.Nav.OpenHomePage();
+            ClearGroupFilter(group.Name);
+            SelectContact(contact.ContactId);
+            SubmitRemovingContactFromGroup(group.Name);
+        }
+
+
+
+        public void AddContactToGroup(ContactData contact, GroupData group)
+        {
+            manager.Nav.OpenHomePage();
+            ClearGroupFilter();
+            SelectContact(contact.ContactId);
+            SelectGroupToAddContact(group.Name);
+            SubmitAddingContactToGroup();
+            
+        }
+
+        private void SelectGroupToAddContact(string groupName)
+        {
+            new SelectElement(driver.FindElement(By.Name("to_group"))).SelectByText(groupName);
+
+        }
+
+        public void SubmitRemovingContactFromGroup(string name)
+        {
+            driver.FindElement(By.CssSelector("input[value='Remove from "+ '"'+ name + '"' + "']")).Click();
+        }
+
+        private void SubmitAddingContactToGroup()
+        {
+            driver.FindElement(By.Name("add")).Click();
+        }
+
+        private void SelectContact(string contactId)
+        {
+            driver.FindElement(By.Id(contactId)).Click();
+        }
+
+        private void ClearGroupFilter(String name = "[all]")
+        {
+            new SelectElement(driver.FindElement(By.Name("group"))).SelectByText(name);
+        }
+
         public ContactData GetContactInformationFromCard(int index)
         {
             manager.Nav.OpenHomePage();

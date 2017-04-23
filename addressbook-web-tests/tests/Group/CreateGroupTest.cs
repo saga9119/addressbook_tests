@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
 using Newtonsoft.Json;
+using System;
 
 namespace AddressbookWebTests
 {
@@ -72,6 +73,19 @@ namespace AddressbookWebTests
 
         }
 
+        [Test]
+        public void TestDBConnection()
+        {
+            //GroupData.GetAllFromDB().ForEach(p => System.Console.Out.WriteLine(p));
+
+            System.Console.Out.WriteLine("lol");
+
+            foreach (ContactData contact in GroupData.GetAllFromDB()[0].GetContacts())
+            {
+                
+                System.Console.Out.WriteLine(contact.Deprecated);
+            }
+        }
 
     }
 }

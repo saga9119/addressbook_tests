@@ -1,10 +1,13 @@
 ﻿using System;
-using System.Xml;
 using System.Text.RegularExpressions;
-using System.Xml.Serialization;
+using LinqToDB.Mapping;
+using LinqToDB;
+using System.Linq;
+using System.Collections.Generic;
 
 namespace AddressbookWebTests
 {
+    [Table(Name = "addressbook")]
     public class ContactData : IEquatable<ContactData>, IComparable<ContactData>
     {
         private string firstname;
@@ -128,13 +131,15 @@ namespace AddressbookWebTests
             return this;
         }
 
-
+        [Column(Name = "id"), PrimaryKey]
         public string ContactId { get; set; }
 
+        [Column(Name = "firstname")]
         public string Firstname { get; set; }
 
         public string Middlename { get; set; }
 
+        [Column(Name = "lastname")]
         public string Lastname { get; set; }
 
         public string Nickname { get; set; }
@@ -178,6 +183,9 @@ namespace AddressbookWebTests
         public string Notes { get; set; }
 
         public string Homepage { get; set; }
+
+        [Column(Name = "deprecated")]
+        public string Deprecated { get; set; }
 
         public string AllEmails
         {
@@ -313,6 +321,14 @@ namespace AddressbookWebTests
                 return 1;
             }
             return ToString().CompareTo(other.ToString());
+        }
+
+        public static List<ContactData> GetAllFromDB()
+        {
+            using (AddressbookDB db = new AddressbookDB())
+            {
+                return (from c in db.Contacts.Where(x => x.Deprecated == "0000-00-00 00:00:00") select c).ToList();
+            }
         }
     }
 }
