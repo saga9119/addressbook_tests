@@ -58,11 +58,11 @@ namespace AddressbookWebTests
         [Test, TestCaseSource("GroupDataFromJsonFile")]
         public void CreateGroupWithoutParentTest(GroupData group)
         {
-            List<GroupData> oldGroups = app.Group.GetGroupsList();
+            List<GroupData> oldGroups = GroupData.GetAllFromDB();
             app.Group.CreateGroup(group);
             Assert.AreEqual(oldGroups.Count + 1, app.Group.GetGroupsCount());
 
-            List<GroupData> newGroups = app.Group.GetGroupsList();
+            List<GroupData> newGroups = GroupData.GetAllFromDB();
             newGroups.Sort();
             group.GroupId = newGroups.Find(g => (g.Name == group.Name)).GroupId;
 
@@ -71,20 +71,6 @@ namespace AddressbookWebTests
 
             Assert.AreEqual(oldGroups, newGroups);
 
-        }
-
-        [Test]
-        public void TestDBConnection()
-        {
-            //GroupData.GetAllFromDB().ForEach(p => System.Console.Out.WriteLine(p));
-
-            System.Console.Out.WriteLine("lol");
-
-            foreach (ContactData contact in GroupData.GetAllFromDB()[0].GetContacts())
-            {
-                
-                System.Console.Out.WriteLine(contact.Deprecated);
-            }
         }
 
     }

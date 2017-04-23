@@ -18,11 +18,11 @@ namespace AddressbookWebTests
         };
             app.Nav.GoToContactsPage();
 
-            List<ContactData> oldContacts = app.Contact.GetContactsList();
+            List<ContactData> oldContacts = ContactData.GetAllFromDB();
             app.Contact.EditContact(0, contact);
             Assert.AreEqual(oldContacts.Count, app.Contact.GetContactsCount());
 
-            List<ContactData> newContacts = app.Contact.GetContactsList();
+            List<ContactData> newContacts = ContactData.GetAllFromDB();
             newContacts.Sort();
             contact.ContactId = newContacts.Find(c => (c.Lastname == contact.Lastname)).ContactId;
             oldContacts[0] = contact;

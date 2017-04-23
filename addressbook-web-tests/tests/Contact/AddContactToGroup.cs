@@ -8,7 +8,7 @@ using System.Linq;
 namespace AddressbookWebTests
 {
     [TestFixture]
-    public class AddContactToGroup : AuthTestBase
+    public class AddContactToGroup : ContactTestBase
     {
 
 
